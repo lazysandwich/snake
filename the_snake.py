@@ -101,12 +101,14 @@ pygame.display.set_caption('Badgers & Cats')
 # Time setup.
 clock = pygame.time.Clock()
 
+
 class GameObject:
     """Base class for objects such as Snake, Apple, Badger, BlackCat."""
 
     def __init__(self, position, body_color):
         self.position = position
         self.body_color = body_color
+
 
 class Snake(GameObject):
     """
@@ -153,7 +155,6 @@ class Snake(GameObject):
                 if (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_SPACE):
                     waiting_for_space = False
-
 
 
     def draw(self, surface):
@@ -251,6 +252,7 @@ class BlackCat(Badger):
                            (GRID_SIZE, GRID_SIZE))
         surface.blit(black_cat, rect)
 
+
 def handle_keys(game_object):
     """Function to handle user actions."""
     for event in pygame.event.get():
@@ -266,6 +268,7 @@ def handle_keys(game_object):
                 game_object.next_direction = LEFT
             elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
+
 
 def update_direction(self):
     """Method for updating direction after pressing a button."""
@@ -327,136 +330,23 @@ def add_apple(apples):
 
 
 def main():
-    """Here we need to create instances of classes."""
-    game_speed = 3
-    score = 0
-    bonus = 1
-    apple_for_bonus = 0
-    frame_counter = 0  # Frame counter.
-    # Number of frames between movements of badger_friends objects.
-    badger_move_interval = 15
-    black_cat_move_interval = 30
+    """Main он и в африке main"""
+    pygame.init()
     snake = Snake()
-    badger_friends = [Badger() for _ in range(4)]
     apple = Apple()
-    # Bonuses for cats of different colors.
-    apple_points = {'orange': 10, 'red': 20, 'green': 30}
-    apples = [Apple() for _ in range(1)]
-    apple.randomize_position()
-    black_cat = BlackCat()
 
     while True:
-        clock.tick(game_speed)
-        frame_counter += 1
-        # Describe the main logic of the game here.
+        clock.tick(SPEED)
+
         handle_keys(snake)
         snake.update_direction()
         snake.move()
-
-        # Moving friendly objects.
-        if frame_counter % badger_move_interval == 0:
-            for badger_friend in badger_friends:
-                badger_friend.randomize_move()
-
-        # Moving the black-and-white cat.
-        if frame_counter % black_cat_move_interval == 0:
-            black_cat.randomize_move()
-
-        # Check if a friendly object is eaten.
-        for badger_friend in badger_friends:
-            if snake.positions[0] == badger_friend.position:
-
-                # Reducing snake length, increasing game speed, resetting
-                # the count of eaten cats (apples) and decreasing the score.
-                snake.length -= 3
-                game_speed += 2
-                score -= 200
-                apple_for_bonus = 0
-                bonus = apple_for_bonus // 5 + 1
-
-                # Adding another apple (cat) if the game speed exceeds
-                # a certain value.
-                if game_speed % 5 == 0 and len(apples) < MAX_APPLES:
-                    add_apple(apples)
-
-                # Checking the snake, if its length becomes
-                # less than 0 - game over.
-                if snake.length <= 0:
-                    snake.reset(screen)
-                    game_speed = 3
-                    score = 0
-                    apples = [Apple() for _ in range(1)]
-
-                # If you delete this block, then eating one of the badgers
-                # will not trigger the randomization of all objects.
-                for apple in apples:
-                    apple.randomize_position()
-
-                for badger_friend in badger_friends:
-                    badger_friend.randomize_position()
-
-                # ------------------------------------------------------
-                # in case of block removal - uncomment the line below.
-                # badger_friend.randomize_position()
-
-        if snake.positions[0] in snake.positions[1:]:
-            snake.reset(screen)
-            score = 0
-            game_speed = 3
-            apples = [Apple() for _ in range(1)]
-
-        # Checking if the black cat object is eaten.
-        if snake.positions[0] == black_cat.position:
-            game_speed -= 1
-            apple_for_bonus += 5
-            bonus = apple_for_bonus // 5 + 1
-            black_cat.randomize_position()
-
-        # Checking if one of the cats is eaten.
-        for apple in apples:
-            if snake.positions[0] == apple.position:
-                score += apple_points[apple.body_color] * bonus
-                snake.length += 1
-                game_speed += 1
-                apple_for_bonus += 1
-                bonus = apple_for_bonus // 5 + 1
-
-                # Adding another apple (cat) if the game speed exceeds
-                # a certain value.
-                if game_speed % 5 == 0 and len(apples) < MAX_APPLES:
-                    add_apple(apples)
-
-                # If you delete this block, then eating one of the apples
-                # will not trigger the randomization of all objects.
-                for apple in apples:
-                    apple.randomize_position()
-
-                for badger_friend in badger_friends:
-                    badger_friend.randomize_position()
-
-                # -------------------------------------------------------
-                # in case of block removal - uncomment the line below.
-                # apple.randomize_position()
-
-        # Refreshing the screen.
-        screen.fill(BOARD_BACKGROUND_COLOR)
-        screen.blit(background, (0, 0))
-        snake.draw(screen)
-        black_cat.draw(screen) if game_speed > 15 else None
-
-        for apple in apples:
-            apple.draw(screen)
-
-        for badger_friend in badger_friends:
-            badger_friend.draw(screen)
-
-        draw_length(screen, snake.length, game_speed,
-                    score, bonus, apple_points)
+        if snake.get_head_position() == apple.position:
+            snake.length += 1
+            apple.randomize_position()
+        snake.draw()
+        apple.draw()
         pygame.display.update()
-
-        if frame_counter >= black_cat_move_interval:
-            frame_counter = 0  # Resetting the frame counter.
-
 
 if __name__ == '__main__':
     main()
