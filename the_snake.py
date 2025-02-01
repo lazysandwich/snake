@@ -1,37 +1,34 @@
 from random import choice
 import pygame
 
-# Константы для размеров поля и сетки
+# Константы
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
-GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
-GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
 
-# Направления движения
+# Направления
 UP = (0, -1)
 DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
 # Цвета
-BOARD_BACKGROUND_COLOR = (0, 0, 0)  # Черный фон
-BORDER_COLOR = (93, 216, 228)  # Цвет границы
-APPLE_COLOR = (255, 0, 0)  # Цвет яблока
-SNAKE_COLOR = (0, 255, 0)  # Цвет змейки
+BOARD_BACKGROUND_COLOR = (0, 0, 0)
+BORDER_COLOR = (93, 216, 228)
+APPLE_COLOR = (255, 0, 0)
+SNAKE_COLOR = (0, 255, 0)
 
-# Скорость змейки
+# Скорость
 SPEED = 20
 
-# Инициализация экрана
+# Настройка окна
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Змейка")
 
-# Часы для управления скоростью
 clock = pygame.time.Clock()
 
 
 class GameObject:
-    """Родительский класс для игровых объектов."""
+    """Родительский класс игровых объектов."""
 
     def init(self) -> None:
         self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
@@ -58,7 +55,7 @@ class Apple(GameObject):
         return self.position
 
     def draw(self) -> None:
-        """Рисует яблоко на экране."""
+        """Рисует яблоко."""
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
@@ -99,7 +96,7 @@ class Snake(GameObject):
             self.last = self.positions.pop()
 
     def draw(self) -> None:
-        """Рисует змейку на экране."""
+        """Рисует змейку."""
         for position in self.positions[:-1]:
             rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, self.body_color, rect)
@@ -126,8 +123,9 @@ class Snake(GameObject):
         self.direction = choice((RIGHT, LEFT, UP, DOWN))
         self.next_direction = None
         self.body_color = SNAKE_COLOR
-        def handle_keys(snake: Snake) -> None:
-    """Обрабатывает нажатия клавиш."""
+
+
+def handle_keys(snake: Snake) -> None:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
