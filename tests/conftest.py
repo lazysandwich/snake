@@ -1,5 +1,6 @@
 import os
 import sys
+import pygame
 from multiprocessing import Process
 from pathlib import Path
 from typing import Any
@@ -121,19 +122,19 @@ def loop_breaker_decorator(func):
 @pytest.fixture
 def modified_clock(_the_snake):
     class _Clock:
-        def __init__(self, clock_obj: Clock) -> None:
+        def init(self, clock_obj):
             self.clock = clock_obj
 
         @loop_breaker_decorator
         def tick(self, *args, **kwargs):
             return self.clock.tick(*args, **kwargs)
 
-        def __getattribute__(self, name: str) -> Any:
+        def getattr(self, name: str) -> Any:
             if name in ['tick', 'clock']:
-                return super().__getattribute__(name)
-            return self.clock.__getattribute__(name)
+                return super().getattr(name)
+            return getattr(self.clock, name)
 
-    original_clock = _the_snake.clock
+    original_clock = pygame.time.Clock()  # Создаем объект Clock
     modified_clock_obj = _Clock(original_clock)
     _the_snake.clock = modified_clock_obj
     yield
