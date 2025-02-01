@@ -31,6 +31,7 @@ class GameObject:
     """Родительский класс игровых объектов."""
 
     def init(self) -> None:
+        """Инициализирует объект."""
         self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         self.body_color = None
 
@@ -43,6 +44,7 @@ class Apple(GameObject):
     """Класс яблока."""
 
     def init(self) -> None:
+        """Создаёт яблоко в случайной позиции."""
         super().init()
         self.position = self.randomize_position()
         self.body_color = APPLE_COLOR
@@ -65,6 +67,7 @@ class Snake(GameObject):
     """Класс змейки."""
 
     def init(self) -> None:
+        """Инициализирует змейку."""
         super().init()
         self.length = 1
         self.positions = [self.position]
@@ -123,9 +126,8 @@ class Snake(GameObject):
         self.direction = choice((RIGHT, LEFT, UP, DOWN))
         self.next_direction = None
         self.body_color = SNAKE_COLOR
-
-
-def handle_keys(snake: Snake) -> None:
+        def handle_keys(snake: Snake) -> None:
+    """Обрабатывает нажатия клавиш."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
