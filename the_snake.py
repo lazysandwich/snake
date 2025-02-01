@@ -156,7 +156,6 @@ class Snake(GameObject):
                         and event.key == pygame.K_SPACE):
                     waiting_for_space = False
 
-
     def draw(self, surface):
         """Rendering the snake."""
         for i, position in enumerate(self.positions[:-1]):
@@ -336,7 +335,6 @@ def main():
     apple = Apple()
 
     while True:
-        clock.tick(SPEED)
 
         handle_keys(snake)
         snake.update_direction()
@@ -347,6 +345,7 @@ def main():
         snake.draw()
         apple.draw()
         pygame.display.update()
+
 
 if __name__ == '__main__':
     main()
